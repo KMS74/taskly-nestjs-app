@@ -1,26 +1,42 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
-import { UpdateTaskDto } from './dto/update-task.dto';
+import { UpdateTaskStatusDto } from './dto/update-task.dto';
+import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
+import { TaskRepository } from './task.repository';
 
 @Injectable()
 export class TasksService {
+  constructor(private taskRepository: TaskRepository) {}
   create(createTaskDto: CreateTaskDto) {
-    return 'This action adds a new task';
+    return this.taskRepository.createTask(createTaskDto);
   }
 
-  findAll() {
-    return `This action returns all tasks`;
+  findAll(filterDto: GetTasksFilterDto) {
+    return this.taskRepository.getTasks(filterDto);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} task`;
+  async findOne(id: string) {
+    const task = await this.taskRepository.findOneBy({
+      id,
+    });
+    if (!task) {
+      throw new NotFoundException(`Task with Id ${id} not found`);
+    }
+    // if task found, return it
+    return task;
   }
 
-  update(id: number, updateTaskDto: UpdateTaskDto) {
-    return `This action updates a #${id} task`;
+  async updateTaskStatus(id: string, updateTaskStatusDto: UpdateTaskStatusDto) {
+    const task = await this.findOne(id);
+    task.status = updateTaskStatusDto.status;
+    await this.taskRepository.save(task);
+    return task;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} task`;
+  async remove(id: string) {
+    const deletedResult = await this.taskRepository.delete(id);
+    if (deletedResult.affected === 0) {
+      throw new NotFoundException(`Task with Id ${id} not found`);
+    }
   }
 }

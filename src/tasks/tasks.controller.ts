@@ -6,37 +6,58 @@ import {
   Patch,
   Param,
   Delete,
+  Logger,
+  Query,
+  ValidationPipe,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
-import { UpdateTaskDto } from './dto/update-task.dto';
+import { UpdateTaskStatusDto } from './dto/update-task.dto';
+import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 
-@Controller('tasks')
+@Controller('tasks') // // The @Controller() decorator defines a controller class.
+// /tasks is the path prefix for all the routes defined in this controller.
 export class TasksController {
+  // logger is an instance of the Logger class, which is a built-in NestJS
+  private readonly logger = new Logger(TasksController.name);
+
+  // The constructor() method defines a private tasksService property and
+  // injects the TasksService dependency through the constructor.
   constructor(private readonly tasksService: TasksService) {}
 
   @Post()
-  create(@Body() createTaskDto: CreateTaskDto) {
+  create(@Body(ValidationPipe) createTaskDto: CreateTaskDto) {
+    this.logger.log('Creating a task...');
     return this.tasksService.create(createTaskDto);
   }
 
   @Get()
-  findAll() {
-    return this.tasksService.findAll();
+  findAll(@Query(ValidationPipe) filterDto: GetTasksFilterDto) {
+    this.logger.log('Getting all tasks...');
+    return this.tasksService.findAll(filterDto);
   }
 
   @Get(':id')
+  // :id is a route parameter.
+  // It is a variable part of the route
   findOne(@Param('id') id: string) {
-    return this.tasksService.findOne(+id);
+    this.logger.log('Getting a task...');
+    return this.tasksService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
-    return this.tasksService.update(+id, updateTaskDto);
+  // update task status by id
+  @Patch(':id/status')
+  update(
+    @Param('id') id: string,
+    @Body(ValidationPipe) updateTaskStatusDto: UpdateTaskStatusDto,
+  ) {
+    this.logger.log('Updating a task status...');
+    return this.tasksService.updateTaskStatus(id, updateTaskStatusDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.tasksService.remove(+id);
+    this.logger.log('Deleting a task...');
+    return this.tasksService.remove(id);
   }
 }
