@@ -9,6 +9,7 @@ import {
   Logger,
   Query,
   ValidationPipe,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -40,7 +41,7 @@ export class TasksController {
   @Get(':id')
   // :id is a route parameter.
   // It is a variable part of the route
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
     this.logger.log('Getting a task...');
     return this.tasksService.findOne(id);
   }
@@ -48,7 +49,7 @@ export class TasksController {
   // update task status by id
   @Patch(':id/status')
   update(
-    @Param('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body(ValidationPipe) updateTaskStatusDto: UpdateTaskStatusDto,
   ) {
     this.logger.log('Updating a task status...');
@@ -56,7 +57,7 @@ export class TasksController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id', ParseUUIDPipe) id: string) {
     this.logger.log('Deleting a task...');
     return this.tasksService.remove(id);
   }
