@@ -16,7 +16,7 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskStatusDto } from './dto/update-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 
-@Controller('tasks') // // The @Controller() decorator defines a controller class.
+@Controller('tasks') // The @Controller() decorator defines a controller.
 // /tasks is the path prefix for all the routes defined in this controller.
 export class TasksController {
   // logger is an instance of the Logger class, which is a built-in NestJS
