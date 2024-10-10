@@ -8,7 +8,6 @@ import {
   Delete,
   Logger,
   Query,
-  ValidationPipe,
   ParseUUIDPipe,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
@@ -27,13 +26,13 @@ export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
   @Post()
-  create(@Body(ValidationPipe) createTaskDto: CreateTaskDto) {
+  create(@Body() createTaskDto: CreateTaskDto) {
     this.logger.log('Creating a task...');
     return this.tasksService.create(createTaskDto);
   }
 
   @Get()
-  findAll(@Query(ValidationPipe) filterDto: GetTasksFilterDto) {
+  findAll(@Query() filterDto: GetTasksFilterDto) {
     this.logger.log('Getting all tasks...');
     return this.tasksService.findAll(filterDto);
   }
@@ -50,7 +49,7 @@ export class TasksController {
   @Patch(':id/status')
   update(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body(ValidationPipe) updateTaskStatusDto: UpdateTaskStatusDto,
+    @Body() updateTaskStatusDto: UpdateTaskStatusDto,
   ) {
     this.logger.log('Updating a task status...');
     return this.tasksService.updateTaskStatus(id, updateTaskStatusDto);
