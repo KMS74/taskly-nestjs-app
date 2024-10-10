@@ -5,8 +5,8 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   host: 'localhost',
   port: 5432,
   username: 'postgres',
-  password: 'admin',
-  database: 'taskmanagement',
-  entities: [__dirname + '/../**/*.entity.js'], // any file in the src dir ends with .entity.ts
+  password: 'postgres',
+  database: 'taskly-db',
+  autoLoadEntities: true,
   synchronize: true,
 };
