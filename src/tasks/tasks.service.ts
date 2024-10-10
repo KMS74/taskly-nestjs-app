@@ -22,7 +22,7 @@ export class TasksService {
     if (!task) {
       throw new NotFoundException(`Task with Id ${id} not found`);
     }
-    // if task found, return it
+
     return task;
   }
 
