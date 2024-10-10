@@ -11,7 +11,8 @@ export class TaskRepository extends Repository<Task> {
   constructor(private dataSource: DataSource) {
     super(Task, dataSource.createEntityManager());
   }
-  //  define custom methods here
+  //  Define custom methods here to interact with the database
+
   async createTask(createTaskDto: CreateTaskDto) {
     const { title, description } = createTaskDto;
     // create a new task object
@@ -45,6 +46,7 @@ export class TaskRepository extends Repository<Task> {
     const tasks = await query.getMany();
     return tasks;
   }
+
   async getAllOpenTasks() {
     const query = this.createQueryBuilder('task');
     query.andWhere('task.status = :status', { status: TaskStatus.OPEN });
