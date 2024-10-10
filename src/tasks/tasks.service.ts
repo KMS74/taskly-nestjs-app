@@ -27,8 +27,9 @@ export class TasksService {
   }
 
   async updateTaskStatus(id: string, updateTaskStatusDto: UpdateTaskStatusDto) {
+    const { status } = updateTaskStatusDto;
     const task = await this.findOne(id);
-    task.status = updateTaskStatusDto.status;
+    task.status = status;
     await this.taskRepository.save(task);
     return task;
   }
