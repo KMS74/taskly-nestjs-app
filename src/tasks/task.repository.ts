@@ -19,8 +19,9 @@ export class TaskRepository extends Repository<Task> {
     const task = this.create({
       title,
       description,
-      status: TaskStatus.OPEN,
+      status: TaskStatus.OPEN, // default status is OPEN
     });
+
     // save the task object to the database and return it
     return await this.save(task);
   }
