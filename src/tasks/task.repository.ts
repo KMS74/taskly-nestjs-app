@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { Task } from './task.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
@@ -8,6 +8,9 @@ import { Injectable } from '@nestjs/common';
 // Repository is supposed to work with your entity objects. Find entities, insert, update, delete, etc.
 @Injectable()
 export class TaskRepository extends Repository<Task> {
+  constructor(private dataSource: DataSource) {
+    super(Task, dataSource.createEntityManager());
+  }
   //  Define custom methods here to interact with the database
 
   async createTask(createTaskDto: CreateTaskDto) {
