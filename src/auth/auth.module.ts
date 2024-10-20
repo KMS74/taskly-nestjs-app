@@ -7,15 +7,21 @@ import { User } from './user.entity';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule,
     PassportModule.register({ defaultStrategy: 'Jwt' }),
-    JwtModule.register({
-      secret: 'topSecret51', // TODO: Move to env file or use a more secure way like AWS KMS or Azure Key Vault to store secrets
-      signOptions: {
-        expiresIn: 3600, // token expires in 1 hour
-      },
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get('JWT_SECRET'),
+        signOptions: {
+          expiresIn: 3600, // token expires in 1 hour
+        },
+      }),
     }),
     TypeOrmModule.forFeature([User]),
   ],
