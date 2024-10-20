@@ -16,6 +16,8 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskStatusDto } from './dto/update-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from 'src/auth/get-user.decorator';
+import { User } from 'src/auth/user.entity';
 
 @Controller('tasks') // The @Controller() decorator defines a controller.
 // /tasks is the path prefix for all the routes defined in this controller.
@@ -29,23 +31,23 @@ export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
   @Post()
-  create(@Body() createTaskDto: CreateTaskDto) {
+  create(@Body() createTaskDto: CreateTaskDto, @GetUser() user: User) {
     this.logger.log('Creating a task...');
-    return this.tasksService.create(createTaskDto);
+    return this.tasksService.create(createTaskDto, user);
   }
 
   @Get()
-  findAll(@Query() filterDto: GetTasksFilterDto) {
+  findAll(@Query() filterDto: GetTasksFilterDto, @GetUser() user: User) {
     this.logger.log('Getting all tasks...');
-    return this.tasksService.findAll(filterDto);
+    return this.tasksService.findAll(filterDto, user);
   }
 
   @Get(':id')
   // :id is a route parameter.
   // It is a variable part of the route
-  findOne(@Param('id', ParseUUIDPipe) id: string) {
+  findOne(@Param('id', ParseUUIDPipe) id: string, @GetUser() user: User) {
     this.logger.log('Getting a task...');
-    return this.tasksService.findOne(id);
+    return this.tasksService.findOne(id, user);
   }
 
   // update task status by id
@@ -53,14 +55,19 @@ export class TasksController {
   update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateTaskStatusDto: UpdateTaskStatusDto,
+    @GetUser() user: User,
   ) {
     this.logger.log('Updating a task status...');
-    return this.tasksService.updateTaskStatus(id, updateTaskStatusDto);
+    return this.tasksService.updateTaskStatus(id, updateTaskStatusDto, user);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseUUIDPipe) id: string) {
+  remove(
+    @Param('id', ParseUUIDPipe) id: string,
+
+    @GetUser() user: User,
+  ) {
     this.logger.log('Deleting a task...');
-    return this.tasksService.remove(id);
+    return this.tasksService.remove(id, user);
   }
 }
