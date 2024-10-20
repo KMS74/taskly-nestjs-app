@@ -32,13 +32,21 @@ export class TasksController {
 
   @Post()
   create(@Body() createTaskDto: CreateTaskDto, @GetUser() user: User) {
-    this.logger.log('Creating a task...');
+    this.logger.verbose(
+      `User ${user.username} creating a task. Payload: ${JSON.stringify(
+        createTaskDto,
+      )}`,
+    );
     return this.tasksService.create(createTaskDto, user);
   }
 
   @Get()
   findAll(@Query() filterDto: GetTasksFilterDto, @GetUser() user: User) {
-    this.logger.log('Getting all tasks...');
+    this.logger.verbose(
+      `User "${user.username}" retrieving all tasks. Filters: ${JSON.stringify(
+        filterDto,
+      )}`,
+    );
     return this.tasksService.findAll(filterDto, user);
   }
 
