@@ -6,6 +6,7 @@ export class GetTasksFilterDto {
   @IsOptional()
   @IsEnum(TaskStatus)
   status: TaskStatus;
+
   @IsOptional()
   @IsNotEmpty()
   @IsString()
