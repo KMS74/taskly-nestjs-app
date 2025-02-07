@@ -1,0 +1,14 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: taskly-postgres-db
+    restart: always
+    env_file:
+      - .env.development
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+
+    ports:
+      - '5432:5432'
