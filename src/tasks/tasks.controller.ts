@@ -18,6 +18,7 @@ import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../auth/get-user.decorator';
 import { User } from '../auth/user.entity';
+import { ApiResponse } from '@nestjs/swagger';
 
 @Controller('tasks') // The @Controller() decorator defines a controller.
 // /tasks is the path prefix for all the routes defined in this controller.
@@ -30,6 +31,11 @@ export class TasksController {
   // injects the TasksService dependency through the constructor.
   constructor(private readonly tasksService: TasksService) {}
 
+  @ApiResponse({
+    status: 201,
+    description: 'The task has been successfully created.',
+  })
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
   @Post()
   create(@Body() createTaskDto: CreateTaskDto, @GetUser() user: User) {
     this.logger.verbose(
