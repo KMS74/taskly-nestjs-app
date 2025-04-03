@@ -4,7 +4,7 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { TaskStatus } from './task-status.enum,';
 import { Injectable } from '@nestjs/common';
-import { User } from 'src/auth/user.entity';
+import { User } from '../auth/user.entity';
 
 // Repository is supposed to work with your entity objects. Find entities, insert, update, delete, etc.
 @Injectable()
