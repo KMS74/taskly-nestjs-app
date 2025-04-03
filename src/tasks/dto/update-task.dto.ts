@@ -1,7 +1,7 @@
 import { CreateTaskDto } from './create-task.dto';
 import { IsEnum } from 'class-validator';
 import { PartialType } from '@nestjs/mapped-types';
-import { TaskStatus } from '../task-status.enum,';
+import { TaskStatus } from '../task-status.enum';
 
 // The PartialType() function creates a new class that extends the original
 // UpdateTaskDto class with all the properties set to optional.
