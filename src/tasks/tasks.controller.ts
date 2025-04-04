@@ -10,6 +10,7 @@ import {
   Query,
   ParseUUIDPipe,
   UseGuards,
+  HttpStatus,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -33,10 +34,10 @@ export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
   @ApiResponse({
-    status: 201,
+    status: HttpStatus.CREATED,
     description: 'The task has been successfully created.',
   })
-  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden.' })
   @Post()
   create(@Body() createTaskDto: CreateTaskDto, @GetUser() user: User) {
     this.logger.verbose(
@@ -47,6 +48,11 @@ export class TasksController {
     return this.tasksService.create(createTaskDto, user);
   }
 
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Find all tasks or filtered tasks',
+  })
+  @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden.' })
   @Get()
   findAll(@Query() filterDto: GetTasksFilterDto, @GetUser() user: User) {
     this.logger.verbose(
@@ -57,6 +63,12 @@ export class TasksController {
     return this.tasksService.findAll(filterDto, user);
   }
 
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Find a task by id',
+  })
+  @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden.' })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Task not found.' })
   @Get(':id')
   // :id is a route parameter.
   // It is a variable part of the route
@@ -65,6 +77,12 @@ export class TasksController {
     return this.tasksService.findOne(id, user);
   }
 
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Task statues updated successfully',
+  })
+  @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden.' })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Task not found.' })
   // update task status by id
   @Patch(':id/status')
   update(
@@ -76,6 +94,12 @@ export class TasksController {
     return this.tasksService.updateTaskStatus(id, updateTaskStatusDto, user);
   }
 
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Task deleted successfully',
+  })
+  @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden.' })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Task not found.' })
   @Delete(':id')
   remove(
     @Param('id', ParseUUIDPipe) id: string,
