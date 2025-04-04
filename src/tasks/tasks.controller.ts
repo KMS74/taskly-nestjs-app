@@ -18,8 +18,9 @@ import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../auth/get-user.decorator';
 import { User } from '../auth/user.entity';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 
+@ApiBearerAuth()
 @Controller('tasks') // The @Controller() decorator defines a controller.
 // /tasks is the path prefix for all the routes defined in this controller.
 @UseGuards(AuthGuard('jwt'))

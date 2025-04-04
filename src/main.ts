@@ -20,6 +20,7 @@ async function bootstrap() {
   const port = process.env.PORT ?? 3000;
 
   const config = new DocumentBuilder()
+    .addBearerAuth()
     .setTitle('Taskly Nest.js App')
     .setDescription(
       `Nest.js app that exposes REST APIs for managing user's tasks.`,
